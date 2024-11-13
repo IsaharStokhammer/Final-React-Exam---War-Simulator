@@ -4,6 +4,7 @@ import UserModel from "./models/UserModel";
 
 const PORT = process.env.PORT;
 
+
 export async function create4Users(req: any, res: any): Promise<void> {
   try {
     await mongoose.connect(
@@ -17,24 +18,29 @@ export async function create4Users(req: any, res: any): Promise<void> {
         password: "1234",
         location: "null",
         organization: "example",
+        resources: null
       },
       {
         userName: "yisa2",
         password: "1234",
         location: "null",
         organization: "example",
+        
+        resources: null
       },
       {
         userName: "yisa3",
         password: "1234",
         location: "null",
         organization: "example",
+        resources: null
       },
       {
         userName: "yisa4",
         password: "1234",
         location: "null",
         organization: "example",
+        resources: null
       },
     ];
 

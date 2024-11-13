@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
-import { IUser } from "../types/user";
+import { IResource, IUser } from "../types/user";
 
+import {ILaunchedRocket} from '../types/lounchedRocket'
 
 
 const UserSchema = new Schema<IUser>({
@@ -22,6 +23,14 @@ const UserSchema = new Schema<IUser>({
     type: String,
     enum: ["North", "South", "Center", "West Bank", "null"],
   },
+  lounchedRockets: {
+    type: Array<ILaunchedRocket>,
+    default: []
+  },
+  resources: {
+    type: Array<IResource>,
+    default: [] 
+  }
 });
 
 export default mongoose.model<IUser>("User", UserSchema);

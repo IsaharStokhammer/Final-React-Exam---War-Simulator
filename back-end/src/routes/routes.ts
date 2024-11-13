@@ -8,7 +8,7 @@ const router = Router();
 router.route("/").get((req, res) => {
     res.send("Hello World!");
 });
-router.route("create4").get(create4Users);
+router.route("/create4").get(create4Users);
 
 router.route("/users").get(getAllUsers);
 
