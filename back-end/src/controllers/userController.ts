@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
 import UserModel from "../models/UserModel";
 import jwt from "jsonwebtoken";
+import organizationsArr from "../data/organizations.json";
+import { set } from "mongoose";
+import { IOrganization } from "../models/OrganizationModel";
+
 const SECRET_KEY: string = process.env.SECRET_KEY || " my_secret";
 
 //GET ALL USERS
+
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await UserModel.find();
@@ -51,6 +56,7 @@ export const createUser = async (
       password: user.password,
       location: user.location,
       organization: user.organization,
+      resources: setResourcesPerOrganization(user.organization),
     });
     const registedUser = await UserModel.create(newUser);
     res.status(201).json({ _id: registedUser._id });
@@ -59,3 +65,19 @@ export const createUser = async (
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// מגדיר את סוג וכמות הנשקים ליוזר לפי הארגון אליו היוזר משוייך
+function setResourcesPerOrganization(organization: string) {
+  const currentOrg = organizationsArr.find(
+    (org) => org.name === organization
+  );
+
+  if (!currentOrg) {
+    throw new Error("Organization not found");
+  }
+
+  return currentOrg.resources;
+}
+
+//launchAttack
+

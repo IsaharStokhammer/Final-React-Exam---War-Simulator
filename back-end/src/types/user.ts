@@ -1,10 +1,9 @@
 import { IOrganization } from "../models/OrganizationModel";
 import { ILaunchedRocket } from "./lounchedRocket";
 
-export interface IResource{
-    name : string,
-    amount : number
-}
+import { IResource } from "./resource";
+
+
 
 export interface IUser {
     userName: string;
@@ -15,3 +14,5 @@ export interface IUser {
     lounchedRockets? : ILaunchedRocket[] | null;
 
 }
+
+export { IResource };

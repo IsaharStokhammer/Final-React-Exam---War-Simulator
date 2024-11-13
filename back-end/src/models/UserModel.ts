@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
-import { IResource, IUser } from "../types/user";
+import {IResource, IUser } from "../types/user";
 
 import {ILaunchedRocket} from '../types/lounchedRocket'
 
