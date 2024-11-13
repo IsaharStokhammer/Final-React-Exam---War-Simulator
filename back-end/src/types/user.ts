@@ -1,5 +1,6 @@
 import { IOrganization } from "../models/OrganizationModel";
 
+
 export interface IUser {
     userName: string;
     password: string;
