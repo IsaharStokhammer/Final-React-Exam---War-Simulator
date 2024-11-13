@@ -1,0 +1,15 @@
+.candidate{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    height: 400px;
+    width: 400px;
+    border: 3px black;
+    background-color: beige;
+   align-items: center;
+}
+.image{
+margin-top: 30px;
+ max-width: 300px;
+ max-height: 300px;
+}

@@ -44,6 +44,7 @@ export const createUser = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+  console.log(req.body)
   const user = req.body;
   try {
     const findUserName = await UserModel.findOne({ userName: user.userName });
