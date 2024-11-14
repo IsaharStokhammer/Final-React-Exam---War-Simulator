@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-const SERVER_URL = 'http://localhost:5000';
+const SERVER_URL = 'http://localhost:3000';
 
 type CallbackResponse = { status: string };
 type Message = string | Record<string, any>;

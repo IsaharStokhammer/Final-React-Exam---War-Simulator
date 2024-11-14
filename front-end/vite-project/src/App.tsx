@@ -5,6 +5,7 @@ import LoginPage from "./pages/loginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import AttackPage from "./pages/attackPage/AttackPage";
 import { useSocket } from "./services/useSocket";
+import SocketPage from "./pages/socketPage";
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<LoginPage />} />
         <Route path="/attackPage" element={<AttackPage />} />
+        <Route path="/socketPage" element={<SocketPage />} />
       </Routes>
     </>
   );
