@@ -3,9 +3,9 @@ import {
   getRocketTimeToHit,
 } from "../controllers/enemyController";
 import UserModel from "../models/UserModel";
-import { IcreateAttackDTO } from "./socketDTOs";
+import { ICreateAttackDTO } from "./socketDTOs";
 
-export const createAttackSocket = async (data: IcreateAttackDTO) => {
+export const createAttackSocket = async (data: ICreateAttackDTO) => {
   const { userName, rocket, target_room } = data;
   const user = await UserModel.findOne({ userName: userName });
   //בדיקה שהיוזר קיים

@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import { Server as HTTPServer } from "http";
-import { IcreateAttackDTO as ICreateAttackDTO } from "./socketDTOs";
+import { ICreateAttackDTO as ICreateAttackDTO } from "./socketDTOs";
 import { createAttackSocket } from "./socketFunctions";
 import { getRocketTimeToHit } from "../controllers/enemyController";
 import AttackModel from "../models/AttackModel";
