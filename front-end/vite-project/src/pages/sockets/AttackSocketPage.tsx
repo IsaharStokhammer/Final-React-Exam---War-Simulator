@@ -3,6 +3,7 @@ import { useSocket } from "../../services/useSocket";
 import "./SocketPage.css";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import { IResource } from "../../types";
 
 export function SocketPage() {
   const {
@@ -35,6 +36,10 @@ export function SocketPage() {
       setNewAttack(""); // Clear message input
     }
   };
+
+    function handleLaunchRocket(rocket: IResource): void {
+        throw new Error("Function not implemented.");
+    }
 
   return (
     <div className="chat-container">
@@ -90,6 +95,15 @@ export function SocketPage() {
       >
         Send FUNCTION
       </button>
+      <div className="rocket-container">
+        {resources.map((rocket) => (
+          <div key={rocket.name} className="rocket">
+            <h3>{rocket.name}</h3>
+            <button onClick={() => handleLaunchRocket(rocket)}>Launch</button>
+          </div>
+        ))}
+
+      </div>
     </div>
   );
 }

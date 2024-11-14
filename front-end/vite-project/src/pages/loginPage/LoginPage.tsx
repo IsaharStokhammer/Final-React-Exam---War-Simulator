@@ -45,7 +45,7 @@ const LoginPage: FC = () => {
       try {
         const result = await dispatch(loginUser(user));
         if (result) {
-          navigate("/attackPage");
+          navigate("/attackSocketPage");
         }
       } catch (err) {
         console.error("Login failed:", err);
