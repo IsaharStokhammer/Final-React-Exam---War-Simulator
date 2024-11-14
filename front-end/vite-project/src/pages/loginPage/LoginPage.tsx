@@ -44,6 +44,10 @@ const LoginPage: FC = () => {
     if (user) {
       try {
         const result = await dispatch(loginUser(user));
+        // const organization = user.organization;
+        // if (organization.includes("IDF")) {
+        //   navigate("/defenseSocketPage");
+        // }else
         if (result) {
           navigate("/attackSocketPage");
         }
@@ -77,9 +81,12 @@ const LoginPage: FC = () => {
         />
         <button type="submit">Send</button>
         <p className="switch-auth">
-          create an account <Link to="/register">Register here</Link>
+          don't have an account? <Link to="/register">Register here</Link>
         </p>
       </form>
+      <button>
+        <Link to="/defenseSocketPage">IDF page</Link>
+      </button>
     </div>
   );
 };

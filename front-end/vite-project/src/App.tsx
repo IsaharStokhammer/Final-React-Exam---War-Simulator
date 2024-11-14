@@ -3,9 +3,9 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/loginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
-import AttackPage from "./pages/attackPage/AttackPage";
 import { useSocket } from "./services/useSocket";
 import AttackSocketPage from "./pages/sockets/AttackSocketPage";
+import DefensePage from "./pages/defensePage/DefensePage";
 
 function App() {
 
@@ -17,8 +17,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<LoginPage />} />
-        {/* <Route path="/attackPage" element={<AttackPage />} /> */}
         <Route path="/attackSocketPage" element={<AttackSocketPage/>} />
+        <Route path="/defenseSocketPage" element={<DefensePage/>} />
       </Routes>
     </>
   );
