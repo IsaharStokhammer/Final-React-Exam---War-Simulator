@@ -4,7 +4,7 @@ import rocketsSlice from "./features/rocketsSlice";
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    rockets: rocketsSlice,
+    // rockets: rocketsSlice,
   },
 });
 

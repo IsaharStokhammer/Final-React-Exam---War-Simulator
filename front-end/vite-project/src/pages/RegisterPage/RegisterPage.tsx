@@ -7,9 +7,9 @@ const useAppDispatch = () => useDispatch<AppDispatch>();
 
 
 const RegisterPage = () => {
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
-    const [organization, setOrganization] = useState("");
+    const [userName, setUserName] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [organization, setOrganization] = useState<string>("");
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { status, error } = useSelector((state: RootState) => state.user);
@@ -49,13 +49,21 @@ const RegisterPage = () => {
             required
             autoComplete="current-password"
           />
-          <select required value={organization} onChange={(e) => setOrganization(e.target.value)}>
-            <option value="IDF">IDF</option>
-            <option value="Hezbollah">Hezbollah</option>
-            <option value="Hamas">Hamas</option>
-            <option value="IRGC">IRGC</option>
-            <option value="Houthis">Houthis</option>
-          </select>
+          <select name="organization" id="organization"
+         value={organization}
+         onChange={(e) => setOrganization(e.target.value)}>
+          <option value="Hezbollah">Hezbollah</option>
+          <option value="Hamas">Hamas</option>
+          <option value="IRGC">IRGC</option>
+          <option value="Houthis">Houthis</option>
+          <option value="IDF">IDF</option>
+        </select>
+        {organization =="IDF"&& <select name="IDF" id="IDF" value={"IDF"} onChange={(e) => setOrganization(e.target.value)}>
+          <option value="IDF - North">North</option>
+          <option value="IDF - South">South</option>
+          <option value="IDF - Center">Center</option>
+          <option value="IDF - West Bank">West Bank</option>
+        </select> }
           <button type="submit">Send</button>
           <p className="switch-auth">
             Have an account already? <Link to="/login">login here</Link>

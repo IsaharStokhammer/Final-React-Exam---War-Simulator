@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSocket } from '../services/useSocket';
+import { useSocket } from '../../services/useSocket';
 
 export function SocketPage() {
   const {
