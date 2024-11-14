@@ -5,8 +5,8 @@ import {
 import UserModel from "../models/UserModel";
 import { ICreateAttackDTO } from "./socketDTOs";
 
-export const createAttackSocket = async (data: ICreateAttackDTO) => {
-  const { userName, rocket, target_room } = data;
+export const createAttackSocket = async (userName: string, rocket : string, target_room : string) => {
+  
   try{
 
   
@@ -41,5 +41,6 @@ export const createAttackSocket = async (data: ICreateAttackDTO) => {
 }
 catch(error){
   console.error(error);
+  return "12"
 }
 };

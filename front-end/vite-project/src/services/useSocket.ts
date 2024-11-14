@@ -50,9 +50,11 @@ export function useSocket() {
     });
   }, []);
 
-  function lounchRocket(userName : string, rocket: IResource, room : string) {
+  function lounchRocket(userName : string, rocket: IResource | string, room : string) {
+    console.log("rocket", rocket, "in function lounchRocket");
     if (socket) {
       socket.emit("createAttack", userName ,rocket, room);
+      console.log("rocket", rocket, "in function lounchRocket after emit");
     }
   }
 

@@ -48,7 +48,7 @@ socket.on("leave", (room) => {
 
 // createAttack
 socket.on("createAttack", async (data: ICreateAttackDTO) => {
-  const attackId = await createAttackSocket(data);
+  const attackId = await createAttackSocket(data.userName, data.rocket, data.target_room);
   //עדכון בחדר על איום חדש
   io.to(data.target_room).emit("attackCreated", attackId);
   const timeToHit = await getRocketTimeToHit(data.rocket);

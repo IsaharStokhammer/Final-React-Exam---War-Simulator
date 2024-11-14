@@ -29,6 +29,7 @@ export function SocketPage() {
   }, [connected]);
 
   function handleLaunchRocket(rocket: IResource): void {
+    console.log("rocket", rocket, "in function handleLaunchRocket");
     lounchRocket(userName, rocket, room);
   }
 

@@ -28,21 +28,23 @@ export function initializeSocketServer(httpServer: HTTPServer) {
     });
 
     // createAttack
-    socket.on("createAttack", async (data: ICreateAttackDTO) => {
-      const attackId = await createAttackSocket(data);
-      //עדכון בחדר על איום חדש
-      io.to(data.target_room).emit("attackCreated", attackId);
-      const timeToHit = await getRocketTimeToHit(data.rocket);
+    socket.on("createAttack", async ( userName, rocket, target_room) => {
+      console.log(userName, rocket, target_room);
+       //עדכון בחדר על איום חדש
+      const attackId = await createAttackSocket(userName, rocket, target_room);
+      if(attackId){
+      io.to(target_room).emit("attackCreated", attackId);
+      const timeToHit = await getRocketTimeToHit(rocket);
       let timeLeft = timeToHit;
       const intervalId = setInterval(() => {
-        io.to(data.target_room).emit("time-left", timeLeft);
+        io.to(target_room).emit("time-left", timeLeft);
         timeLeft -= 1;
         if (timeLeft <= 0) {
           clearInterval(intervalId);
         }
       }, 1000);
-      io.to(data.target_room).emit("newCountdown", intervalId);
-      console.log(data);
+      io.to(target_room).emit("newCountdown", intervalId);
+      console.log("newCountdown");}
     });
 
     // cancelAttack
