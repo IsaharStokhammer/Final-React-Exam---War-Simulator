@@ -6,16 +6,16 @@ import { IResource } from '../../types';
 
 const AttackPage: React.FC = () => {
 
-    const {
-        connected,
-        messages,
-        room,
-        joinRoom,
-        leaveRoom,
-        sendMessageToRoom,
-        broadcastMessage,
-        sendRequest,
-      } = useSocket();
+    // const {
+    //     connected,
+    //     messages,
+    //     room,
+    //     joinRoom,
+    //     leaveRoom,
+    //     sendMessageToRoom,
+    //     broadcastMessage,
+    //     sendRequest,
+    //   } = useSocket();
 
   const dispatch = useDispatch();
   const { organization, location, ammo, launchedRockets } = useSelector((state: RootState) => state.rockets);
