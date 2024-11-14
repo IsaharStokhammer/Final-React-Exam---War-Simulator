@@ -4,8 +4,12 @@ import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/loginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import AttackPage from "./pages/attackPage/AttackPage";
+import { useSocket } from "./services/useSocket";
 
 function App() {
+
+
+  
   return (
     <>
       <Routes>

@@ -7,7 +7,7 @@ import {
 } from "../controllers/userController";
 import { create4Users } from "../insert4exsampleUsers";
 import { launchAttack } from "../util/atack/atack";
-import { attack } from "../controllers/enemyController";
+import { attack, updateAttack } from "../controllers/enemyController";
 import { getUserByToken } from "../util/general";
 const router = Router();
 
@@ -24,5 +24,7 @@ router.route("/login").post(login);
 router.route("/register").post(createUser);
 
 router.route("/attack").get(attack);
+
+router.route("/updateAttack").post(updateAttack);
 
 export default router;

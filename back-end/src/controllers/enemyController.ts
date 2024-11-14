@@ -63,3 +63,15 @@ export const getRocketTimeToHit = async (
   }
   return missile.speed;
 };
+
+export const updateAttack = async (req: Request, res: Response): Promise<void> => {
+  const { attackId, status } = req.body;
+  const attack = await AttackModel.findById(attackId);
+  if (!attack) {
+    res.status(404).json({ message: "Attack not found" });
+    return;
+  }
+  attack.status = status;
+  await AttackModel.findByIdAndUpdate(attackId, attack);
+  res.status(200).json({ message: "Attack updated successfully" });
+};
