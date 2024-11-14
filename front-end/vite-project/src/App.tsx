@@ -18,8 +18,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<LoginPage />} />
-        <Route path="/attackPage" element={<AttackPage />} />
-        <Route path="/socketPage" element={<SocketPage />} />
+        {/* <Route path="/attackPage" element={<AttackPage />} /> */}
+        {/* <Route path="/socketPage" element={<SocketPage />} /> */}
         <Route path="/attackSocketPage" element={<AttackSocketPage/>} />
       </Routes>
     </>
