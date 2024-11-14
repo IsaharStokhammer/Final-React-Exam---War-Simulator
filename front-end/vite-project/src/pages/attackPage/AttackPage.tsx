@@ -18,15 +18,15 @@ const AttackPage: React.FC = () => {
     //   } = useSocket();
 
   const dispatch = useDispatch();
-  const { organization, location, ammo, launchedRockets } = useSelector((state: RootState) => state.rockets);
+  const { organization } = useSelector((state: RootState) => state.user);
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(updateLocation(e.target.value));
   };
-
+const rockets  = useSelector((state: RootState) => state.user.user?.resources || []);
   const handleLaunchRocket = (rocket: IResource) => {
     const timeToHit = '2:42m'; // לשנות לזמן שמשתנה בספירה לאחור
-    dispatch(launchRocket({ name: rocket.name, timeToHit }));
+    dispatch(launchRocket({ name: rocket.name}));
   };
 
   return (
@@ -36,7 +36,8 @@ const AttackPage: React.FC = () => {
         <h3>Organization: {organization}</h3>
         <label>
           Location:
-          <select value={location} onChange={handleLocationChange}>
+          <select  onChange={handleLocationChange}>
+          {/* <select value={location} onChange={handleLocationChange}> */}
             <option value="North">North</option>
             <option value="South">South</option>
             <option value="Center">Center</option>
@@ -46,15 +47,15 @@ const AttackPage: React.FC = () => {
         <div>
           <h4>Available Ammo</h4>
           <div>
-            {ammo.map((rocket) => (
+            {/* {ammo.map((rocket) => (
               <button
                 key={rocket.name}
                 onClick={() => handleLaunchRocket(rocket)}
                 disabled={rocket.amount === 0}
               >
                 {rocket.name} x {rocket.amount}
-              </button>
-            ))}
+              </button> */}
+            {/* ))} */}
           </div>
         </div>
       </div>
@@ -69,13 +70,13 @@ const AttackPage: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {launchedRockets.map((rocket, index) => (
+          {/* {launchedRockets.map((rocket, index) => (
             <tr key={index}>
               <td>{rocket.name}</td>
               <td>{rocket.timeToHit_in_sec}</td>
               <td>{rocket.status}</td>
-            </tr>
-          ))}
+            </tr> */}
+          {/* ))} */}
         </tbody>
       </table>
     </div>
