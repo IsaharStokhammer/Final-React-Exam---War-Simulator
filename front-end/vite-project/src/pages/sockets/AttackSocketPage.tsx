@@ -12,40 +12,33 @@ export function SocketPage() {
     room,
     joinRoom,
     leaveRoom,
-    sendMessageToRoom,
-    broadcastMessage,
-    sendRequest,
+    lounchRocket,
   } = useSocket();
 
   const user = useSelector((state: RootState) => state.user.user);
-
+  const userName = user?.userName || "";
   const resources = user?.resources || [];
 
   const [newAttack, setNewAttack] = useState<string>("");
-  const [roomName, setRoomName] = useState<string>(""); // State for room name input
+  const [roomName, setRoomName] = useState<string>("");
 
   useEffect(() => {
     if (connected) {
-      joinRoom("general"); // Join a default room when connected
+      joinRoom("general");
     }
   }, [connected]);
 
-  const handleMessageSend = () => {
-    if (newAttack.trim()) {
-      sendMessageToRoom(newAttack);
-      setNewAttack(""); // Clear message input
-    }
-  };
-
-    function handleLaunchRocket(rocket: IResource): void {
-        throw new Error("Function not implemented.");
-    }
+  function handleLaunchRocket(rocket: IResource): void {
+    lounchRocket(userName, rocket, room);
+  }
 
   return (
-    <div className="chat-container">
+    <div className="attackPage">
+        <h1>
+            מסך תקיפה
+        </h1>
       <div className="header">
         <div className="room-name">{room || "כל האיזורים"}</div>
-        {/* Room Management Section */}
         <div className="room-management">
           <label htmlFor="room-select">בחר איזור לתקיפה:</label>
           <select
@@ -76,33 +69,14 @@ export function SocketPage() {
           </div>
         ))}
       </div>
-      <div className="input-container">
-        <input
-          type="text"
-          placeholder="הכנס את שם הטיל"
-          value={newAttack}
-          onChange={(e) => setNewAttack(e.target.value)}
-        />
-        <button onClick={handleMessageSend}>Send</button>
-      </div>
 
-      <button
-        onClick={() =>
-          sendRequest("Sample data", (response) =>
-            console.log("Request callback:", response)
-          )
-        }
-      >
-        Send FUNCTION
-      </button>
       <div className="rocket-container">
         {resources.map((rocket) => (
           <div key={rocket.name} className="rocket">
-            <h3>{rocket.name}</h3>
+            <h3>{rocket.name}</h3> <h3 className="amount">{rocket.amount}</h3>
             <button onClick={() => handleLaunchRocket(rocket)}>Launch</button>
           </div>
         ))}
-
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useState, useEffect } from "react";
+import { io, Socket } from "socket.io-client";
+import { IResource, IUser } from "../types";
 
-const SERVER_URL = 'http://localhost:3000';
+const SERVER_URL = "http://localhost:3000";
 
 type CallbackResponse = { status: string };
 type Message = string | Record<string, any>;
@@ -10,76 +11,89 @@ export function useSocket() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [connected, setConnected] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [room, setRoom] = useState<string>(''); // Keep track of the current room
+  const [room, setRoom] = useState<string>("");
 
   useEffect(() => {
     const socketInstance = io(SERVER_URL);
     setSocket(socketInstance);
 
-    socketInstance.on('connect', () => {
-      console.log('Connected:', socketInstance.id);
+    socketInstance.on("connect", () => {
+      console.log("Connected:", socketInstance.id);
       setConnected(true);
     });
 
-    socketInstance.on('disconnect', (reason: string) => {
-      console.log('Disconnected:', reason);
+    socketInstance.on("disconnect", (reason: string) => {
+      console.log("Disconnected:", reason);
       setConnected(false);
     });
 
-    socketInstance.on('room-message', (message: Message) => {
-      console.log('Room message received:', message);
+    socketInstance.on("room-message", (message: Message) => {
+      console.log("Room message received:", message);
       setMessages((prev) => [...prev, message]);
     });
 
-    socketInstance.on('broadcast-message', (message: Message) => {
-      console.log('Broadcast message received:', message);
-      setMessages((prev) => [...prev, "Broadcast: "+ message]);
+    socketInstance.on("broadcast-message", (message: Message) => {
+      console.log("Broadcast message received:", message);
+      setMessages((prev) => [...prev, "Broadcast: " + message]);
     });
 
-    socketInstance.on('heartbeat', (data: { time: string }) => {
-      console.log('Heartbeat received:', data);
+    socketInstance.on("heartbeat", (data: { time: string }) => {
+      console.log("Heartbeat received:", data);
     });
 
     return () => {
       socketInstance.disconnect();
     };
+
+    socketInstance.on("attackCreated", (attackId: string)=>{
+        console.log("Attack created:", attackId);
+    });
   }, []);
+
+  function lounchRocket(userName : string, rocket: IResource, room : string) {
+    if (socket) {
+      socket.emit("createAttack", userName ,rocket, room);
+    }
+  }
 
   function joinRoom(room: string) {
     if (socket) {
-      socket.emit('join', room);
-      setRoom(room);  // Update the current room state
+      socket.emit("join", room);
+      setRoom(room); // Update the current room state
       console.log(`Joining room: ${room}`);
     }
   }
 
   function leaveRoom(room: string) {
     if (socket) {
-      socket.emit('leave', room);
-      setRoom('');  // Reset room state when leaving
+      socket.emit("leave", room);
+      setRoom(""); // Reset room state when leaving
       console.log(`Leaving room: ${room}`);
     }
   }
 
   function sendMessageToRoom(message: Message) {
     if (socket && room) {
-      socket.emit('message-to-room', room, message);
+      socket.emit("message-to-room", room, message);
       console.log(`Sending message to room ${room}:`, message);
     }
   }
 
   function broadcastMessage(message: Message) {
     if (socket) {
-      socket.emit('broadcast', message);  // Emit broadcast message to all clients except sender
+      socket.emit("broadcast", message); // Emit broadcast message to all clients except sender
       console.log(`Broadcasting message:`, message);
-      setMessages((prev) => [...prev, "Me Broadcasting: "+message]); // When broadcast everyone recieves it but the one who sent it don't
+      setMessages((prev) => [...prev, "Me Broadcasting: " + message]); // When broadcast everyone recieves it but the one who sent it don't
     }
   }
 
-  function sendRequest(data: Message, callback: (response: CallbackResponse) => void) {
+  function sendRequest(
+    data: Message,
+    callback: (response: CallbackResponse) => void
+  ) {
     if (socket) {
-      socket.emit('request', data, (response: CallbackResponse) => {
-        console.log('Request response:', response);
+      socket.emit("request", data, (response: CallbackResponse) => {
+        console.log("Request response:", response);
         callback(response);
       });
     }
@@ -94,5 +108,6 @@ export function useSocket() {
     sendMessageToRoom,
     broadcastMessage,
     sendRequest,
+    lounchRocket
   };
 }

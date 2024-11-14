@@ -7,6 +7,9 @@ import { ICreateAttackDTO } from "./socketDTOs";
 
 export const createAttackSocket = async (data: ICreateAttackDTO) => {
   const { userName, rocket, target_room } = data;
+  try{
+
+  
   const user = await UserModel.findOne({ userName: userName });
   //בדיקה שהיוזר קיים
   if (!user) {
@@ -35,4 +38,8 @@ export const createAttackSocket = async (data: ICreateAttackDTO) => {
   );
 
   return newAttackId;
+}
+catch(error){
+  console.error(error);
+}
 };

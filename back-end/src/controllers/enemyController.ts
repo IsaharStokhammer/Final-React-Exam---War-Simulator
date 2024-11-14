@@ -7,28 +7,37 @@ import { IMissile } from "../types/misslies";
 
 export const attack = async (req: Request, res: Response): Promise<void> => {
   const { userName, target, rocketName } = req.body;
-  const user = await UserModel.findOne({ userName: userName });
+  try {
+    const user = await UserModel.findOne({ userName: userName });
 
-  if (!user) {
-    res.status(404).json({ message: "User not found" });
-    return;
-  }
-  if (!user.resources) {
-    res.status(404).json({ message: "User has no resources" });
-    return;
-  }
-  const rocket = user.resources.find(
-    (resource) => resource.name === rocketName
-  );
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    if (!user.resources) {
+      res.status(404).json({ message: "User has no resources" });
+      return;
+    }
+    const rocket = user.resources.find(
+      (resource) => resource.name === rocketName
+    );
 
-  if (!rocket) {
-    res.status(404).json({ message: "Rocket not found" });
-    return;
+    if (!rocket) {
+      res.status(404).json({ message: "Rocket not found" });
+      return;
+    }
+    const newAttackId: any = addAttackToDB(
+      userName,
+      target,
+      await getRocketTimeToHit(rocketName)
+    );
+    const uptatedUser = launchAttack(user, rocket, target, newAttackId);
+    UserModel.findOneAndUpdate({ userName: userName }, uptatedUser);
+    res.status(200).json({ message: "Attack launched successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
-  const newAttackId : any= addAttackToDB(userName, target, await getRocketTimeToHit(rocketName));
-  const uptatedUser = launchAttack(user, rocket, target, newAttackId);
-  UserModel.findOneAndUpdate({ userName: userName }, uptatedUser);
-  res.status(200).json({ message: "Attack launched successfully" });
 };
 
 //יצירת אטאק חדש בDB
@@ -54,17 +63,28 @@ export const addAttackToDB = async (
 
 export const getRocketTimeToHit = async (
   rocketName: string
-): Promise<number> => {
-  const missile = (await MissilesModel.findOne({
-    name: rocketName,
-  })) as IMissile | null;
-  if (!missile) {
-    throw new Error("Missile not found");
+): Promise<number>  => {
+  try {
+    console.log(rocketName)
+    const missile = (await MissilesModel.findOne({
+      name: rocketName,
+    })) as IMissile | null;
+    console.log("Missile found:", missile);
+    if (!missile) {
+      throw new Error("Missile not found");
+    }
+
+    return missile.speed;
+  } catch (error) {
+    console.error(error);
+    return 1000
   }
-  return missile.speed;
 };
 
-export const updateAttack = async (req: Request, res: Response): Promise<void> => {
+export const updateAttack = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { attackId, status } = req.body;
   const attack = await AttackModel.findById(attackId);
   if (!attack) {
