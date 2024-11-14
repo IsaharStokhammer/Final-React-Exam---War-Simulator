@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
+import e, { Request, Response } from "express";
 import UserModel from "../models/UserModel";
 import jwt from "jsonwebtoken";
 import organizationsArr from "../data/organizations.json";
 import { set } from "mongoose";
 import { IOrganization } from "../models/OrganizationModel";
+import { getUserByToken } from "../util/general";
 
 const SECRET_KEY: string = process.env.SECRET_KEY || " my_secret";
 
@@ -81,4 +82,11 @@ function setResourcesPerOrganization(organization: string) {
 }
 
 //launchAttack
+
+//get user by token
+export const userByToken = async (req: Request, res: Response) => {
+  const token = req.body.token;
+  const user = await getUserByToken(token);
+  res.status(200).json(user);
+}
 

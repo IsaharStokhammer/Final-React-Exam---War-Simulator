@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import candidateReducer from './features/CandidateSlice'
-import userReducer from "./features/UserSlice"
+import userReducer from "./features/UserSlice";
+import rocketsSlice from "./features/rocketsSlice";
 export const store = configureStore({
-    reducer:{
-        candidates:candidateReducer,
-        user:userReducer
-    }
-})  
+  reducer: {
+    user: userReducer,
+    rockets: rocketsSlice,
+  },
+});
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

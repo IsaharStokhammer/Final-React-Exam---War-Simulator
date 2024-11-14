@@ -1,6 +1,9 @@
 import UserModel from "../models/UserModel";
 import { Request, Response } from "express";
 import { launchAttack } from "../util/atack/atack";
+import AttackModel, { IAttack } from "../models/AttackModel";
+import MissilesModel from "../models/MissilesModel";
+import { IMissile } from "../types/misslies";
 
 export const attack = async (req: Request, res: Response): Promise<void> => {
   const { userName, target, rocketName } = req.body;
@@ -22,9 +25,41 @@ export const attack = async (req: Request, res: Response): Promise<void> => {
     res.status(404).json({ message: "Rocket not found" });
     return;
   }
-  const uptatedUser = launchAttack(user, rocket, target);
-
+  const newAttackId : any= addAttackToDB(userName, target, await getRocketTimeToHit(rocketName));
+  const uptatedUser = launchAttack(user, rocket, target, newAttackId);
   UserModel.findOneAndUpdate({ userName: userName }, uptatedUser);
-
   res.status(200).json({ message: "Attack launched successfully" });
+};
+
+//יצירת אטאק חדש בDB
+export const addAttackToDB = async (
+  userName: string,
+  direction: string,
+  timeToHit_in_sec: number
+) => {
+  const newAttack: IAttack = {
+    attackerUserName: userName,
+    direction: direction,
+    timeToHit_in_sec: timeToHit_in_sec,
+    status: "Launched",
+  };
+  try {
+    const addedAttack = await AttackModel.create(newAttack);
+    console.log("Attack added to DB:", addedAttack);
+    return addedAttack._id;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getRocketTimeToHit = async (
+  rocketName: string
+): Promise<number> => {
+  const missile = (await MissilesModel.findOne({
+    name: rocketName,
+  })) as IMissile | null;
+  if (!missile) {
+    throw new Error("Missile not found");
+  }
+  return missile.speed;
 };

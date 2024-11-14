@@ -12,7 +12,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 const LoginPage: FC = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [users, setusers] = useState<User[] | []>([]);
+  const [users, setUsers] = useState<User[] | []>([]);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { status, error } = useSelector((state: RootState) => state.user);
@@ -21,8 +21,12 @@ const LoginPage: FC = () => {
     const fetchData = async () => {
       try {
         const result = await axios.get(`${BASE_URL}/api/users`);
+        if (result.data.token) {
+          localStorage.setItem("token", result.data.token);
+        }
+
         if (result) {
-          setusers(result.data);
+          setUsers(result.data);
         }
       } catch (error) {
         console.error("Failed to fetch users:", error);

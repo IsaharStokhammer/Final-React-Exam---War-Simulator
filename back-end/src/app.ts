@@ -4,6 +4,8 @@ import cors from "cors"
 import connectDB from "./config/DBConfig";
 import router from "./routes/routes";
 import { create4Users } from "./insert4exsampleUsers";
+import { attack } from "./controllers/enemyController";
+import AttackModel from "./models/AttackModel";
 dotenv.config();
 
 const app = express();

@@ -2,21 +2,54 @@ import { ILaunchedRocket } from "../../types/lounchedRocket";
 import { IResource, IUser } from "../../types/user";
 import missiles from "../../data/missiles.json";
 import UserModel from "../../models/UserModel";
+import AttackModel from "../../models/AttackModel";
 
-// מעדכן את הריסורסס של יוזר לאחר ירי
-const updateUserResources = (
+// פונקציה ראשית
+export const launchAttack = async (
   user: IUser,
-  rocket: IResource
-): IResource[] | undefined => {
-  return user.resources?.map((resource): IResource => {
-    if (resource.name === rocket.name) {
-      resource.amount -= 1;
-    }
-    return resource;
-  });
+  rocket: IResource,
+  target: string,
+  addedAttack: any
+): Promise<IUser> => {
+  await updateUserResources(user, rocket);
+
+  const timeToHit = getRocketTimeToHit(rocket.name);
+  const newLaunchedRocket = createLaunchedRocket(rocket, timeToHit);
+
+  user.lounchedRockets?.push(newLaunchedRocket);
+  startCountdown(newLaunchedRocket, target, addedAttack);
+
+  // עדכון DB עם הנתונים החדשים של המשתמש
+  try {
+    await UserModel.findOneAndUpdate(
+      { userName: user.userName },
+      { lounchedRockets: user.lounchedRockets, resources: user.resources }
+    );
+    console.log("User attack data updated successfully.");
+  } catch (error) {
+    console.error("Error updating user attack data:", error);
+  }
+
+  return user;
 };
 
-// מאחזר את זמן ההגעה של רקטה למטרה על פי שם בחיפוש בגייסון
+// מעדכן את הריסוסס[] של המשתמש אחרי ירי רקטה
+const updateUserResources = async (user: IUser, rocket: IResource) => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { userName: user.userName, "resources.name": rocket.name },
+      {
+        $inc: { "resources.$.amount": -1 },
+        lounchedRockets: user.lounchedRockets,
+      },
+      { new: true }
+    );
+  } catch (error) {
+    console.error("Error updating user resources:", error);
+  }
+};
+
+//  ומצא בגייסון את זמן הגעת הרקטה
 const getRocketTimeToHit = (rocketName: string): number => {
   const timeToHit = missiles.find(
     (missile) => missile.name === rocketName
@@ -27,7 +60,7 @@ const getRocketTimeToHit = (rocketName: string): number => {
   return timeToHit;
 };
 
-// יוצר אובייקט חדש של רקטה שנשלחה
+// יוצר אובייקט חדש של רקטה ששוגרה
 const createLaunchedRocket = (
   rocket: IResource,
   timeToHit: number
@@ -42,38 +75,23 @@ const createLaunchedRocket = (
 // מפעיל טיימר שמעדכן את מצב הרקטה עד לפגיעה
 const startCountdown = (
   launchedRocket: ILaunchedRocket,
-  target: string
+  target: any,
+  addedAttack: any
 ): void => {
-  let count = launchedRocket.timeToHit_in_sec * 100;
+  let count = launchedRocket.timeToHit_in_sec * 1000;
   const intervalId = setInterval(() => {
-    console.log(count); // לשנות את הערך בדאטה בייס במקום לוג
+    // לשנות את הערך בדאטה בייס במקום לוג
+    console.log(`Countdown: ${count / 1000} seconds remaining`);
     if (count <= 0) {
       clearInterval(intervalId);
-      console.log(`${launchedRocket.name} hit ${target}!`); // לשנות את הערך בדאטה בייס במקום לוג
+      console.log(`${launchedRocket.name} hit ${target}!`);
+      //הסוקט אמור לעשות את זה
+      // לעדכן את המצב ולהוסיף למקרה שהפגיעה נכשלה
+      // AttackModel.findOneAndUpdate(
+      //   { _id: addedAttack._id },
+      //   { status: "Hit" }
+      // );
     }
-    count -= 100;
+    count -= 1000;
   }, 1000);
-};
-
-// פונקציה ראשית - משגרת התקפה ומטפלת בכל השלבים
-export const launchAttack = (
-  user: IUser,
-  rocket: IResource,
-  target: string
-): IUser => {
-  const updatedResources = updateUserResources(user, rocket);
-  if (updatedResources) {
-    user.resources = updatedResources;
-  }
-
-  const timeToHit = getRocketTimeToHit(rocket.name);
-  const newLaunchedRocket = createLaunchedRocket(rocket, timeToHit);
-
-  user.lounchedRockets?.push(newLaunchedRocket);
-  startCountdown(newLaunchedRocket, target);
-  UserModel.findOneAndUpdate(
-    { userName: user.userName },
-    { lounchedRockets: user.lounchedRockets }
-  ).then((result) => console.log(result)); 
-  return user;
 };
